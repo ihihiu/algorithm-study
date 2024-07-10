@@ -1,49 +1,36 @@
-import sys
-input = sys.stdin.readline
-n, m = map(int, input().split())
-
-graph = []
-for _ in range(n):
-  graph.append(list(map(int, input().split())))
-
-chickens = []
-houses = []
-for i in range(n):
-  for j in range(n):
-    if graph[i][j] == 1:
-      houses.append((i, j))
-    if graph[i][j] == 2:
-      chickens.append((i, j))
-
-length = len(chickens)
-visited = [False] * length
-
-
-min_value = int(1e9)
-run = []
-
-def dfs(depth, start):
-  global min_value
-  global total
-  if depth == m:
+def get_distance(tmp):
+    global ans
     total = 0
-    for house in houses:
-      now_min = int(1e9)
-      for r in run:
-        now_min = min(now_min, abs(house[0] - r[0]) + abs(house[1] - r[1]))
-      total += now_min
-    min_value = min(min_value, total)
-    return
+    for hx, hy in house:
+        distance = int(1e9)
+        for px, py in tmp:
+            d = abs(hx - px) + abs(hy - py)
+            if d < distance:
+                distance = d
+        total += distance
+    ans = min(ans, total)
 
-  for i in range(start, length):
-    if not visited[i]:
-      run.append(chickens[i])
-      visited[i] = True
-      dfs(depth + 1, i + 1)
-      visited[i] = False
-      run.pop()
-      
 
-dfs(0, 0)
+def dfs(depth, start, tmp):
+    if depth == m:
+         get_distance(tmp)
+    else:
+        for i in range(start, len(pizza)):
+            dfs(depth + 1, i + 1, tmp + [pizza[i]])
 
-print(min_value)
+
+n, m = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(n)]
+
+pizza = []
+house = []
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == 1:
+            house.append((i, j))
+        elif graph[i][j] == 2:
+            pizza.append((i, j))
+
+ans = int(1e9)
+dfs(0, 0, [])
+print(ans)

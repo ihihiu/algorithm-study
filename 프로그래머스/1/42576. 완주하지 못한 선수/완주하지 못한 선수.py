@@ -2,10 +2,8 @@ def solution(participant, completion):
     answer = ''
     dict = {}
     for p in participant:
-        if p in dict.keys():
-            dict[p] += 1
-        else:
-            dict[p] = 1
+        dict[p] = dict.get(p, 0) + 1
+        
     for c in completion:
         dict[c] -= 1
     

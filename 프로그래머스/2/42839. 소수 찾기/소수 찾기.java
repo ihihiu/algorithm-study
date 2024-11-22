@@ -1,38 +1,37 @@
 import java.util.*;
 class Solution {
-    int n;
-    int[] ch;
-    Set<Integer> set;
-    
-    public void findPrime(String tmp) {
-        int num = Integer.parseInt(tmp);
-        if (num == 0 || num == 1) return;
-        if (set.contains(num)) return;
-        for (int i = 2; i <= Math.sqrt(num); i++) {
-            if (num % i == 0) return;
+    static int n, answer;
+    static HashSet<Integer> set;
+    static int[] ch;
+    public boolean isPrime(int n) {
+        if (n <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) return false;
         }
-        set.add(num);
+        return true;
     }
-    
-    public void DFS(int depth, String numbers, String tmp) {
-        if (depth == n) return;
+    public void dfs(int depth, String tmp, String numbers) {
+        if (depth != 0) {
+            int n = Integer.parseInt(tmp);
+            if (!set.contains(n)) {
+                set.add(n);
+                if (isPrime(n)) answer++;
+            }
+        }
         for (int i = 0; i < n; i++) {
             if (ch[i] == 0) {
                 ch[i] = 1;
-                String str = tmp + numbers.charAt(i);
-                findPrime(str);
-                DFS(depth + 1, numbers, str);
+                dfs(depth + 1, tmp + numbers.charAt(i), numbers);
                 ch[i] = 0;
             }
         }
     }
-    
     public int solution(String numbers) {
-        set = new HashSet<>();
+        answer = 0;
         n = numbers.length();
+        set = new HashSet<>();
         ch = new int[n];
-        DFS(0, numbers, "");
-        int answer = set.size();
+        dfs(0, "", numbers);
         return answer;
     }
 }

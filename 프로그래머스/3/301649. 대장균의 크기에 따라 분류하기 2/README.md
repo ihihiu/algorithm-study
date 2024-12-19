@@ -1,6 +1,6 @@
 # [level 3] 대장균의 크기에 따라 분류하기 2 - 301649 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/301649#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/301649) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 05월 05일 20:22:19
+2024년 12월 19일 21:01:00
 
 ### 문제 설명
 

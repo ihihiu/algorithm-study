@@ -1,8 +1,7 @@
 -- 코드를 입력하세요
 SELECT ANIMAL_TYPE
-    , COUNT(*) AS count
+    , COUNT(*) count
 FROM ANIMAL_INS
-WHERE ANIMAL_TYPE = 'Cat'
-    OR ANIMAL_TYPE = 'Dog'
+WHERE ANIMAL_TYPE IN ('Dog', 'Cat')
 GROUP BY ANIMAL_TYPE
 ORDER BY 1

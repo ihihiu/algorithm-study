@@ -1,21 +1,23 @@
 import java.util.*;
+
 class Solution {
     public int solution(int[] priorities, int location) {
-        Queue<int[]> queue = new ArrayDeque<>();
+        LinkedList<int[]> list = new LinkedList<>();
         for (int i = 0; i < priorities.length; i++) {
-            queue.offer(new int[] {priorities[i], i});
+            list.add(new int[]{priorities[i], i});
         }
-        Integer[] p = Arrays.stream(priorities).boxed().toArray(Integer[]::new);
-        Arrays.sort(p, Collections.reverseOrder());
-        int answer = 0;
+        Integer[] order = Arrays.stream(priorities).boxed().toArray(Integer[]::new);
+        Arrays.sort(order, Collections.reverseOrder());
+        int idx = 0;
         while (true) {
-            int[] now = queue.poll();
-            if (now[0] == p[answer]) {
-                answer++;
-                if (now[1] == location) break;
+            int[] now = list.poll();
+            if (now[0] == order[idx]) {
+                idx++;
+                if (now[1] == location) return idx;
             }
-            else queue.offer(now);
+            else {
+                list.add(now);
+            }
         }
-        return answer;
     }
 }

@@ -1,36 +1,41 @@
 import java.util.*;
 class Solution {
+    static ArrayList<ArrayList<Integer>> graph;
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i <= n; i++) graph.add(new ArrayList<Integer>());
+        int answer = n;
+        graph = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i <= n; i++) graph.add(new ArrayList<>());
         for (int[] x : wires) {
-            graph.get(x[0]).add(x[1]);
-            graph.get(x[1]).add(x[0]);
+            int a = x[0];
+            int b = x[1];
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
-        for (int[] x : wires) {
+        for (int i = 0; i < wires.length; i++) {
+            int a = wires[i][0];
+            int b = wires[i][1];
             int[] ch = new int[n + 1];
-            ch[x[1]] = 1;
-            Queue<Integer> queue = new ArrayDeque<>();
-            queue.offer(x[0]);
-            int cnt = 0;
+            ch[a] = 1;
+            ch[b] = 1;
+            int cnt = 1;
+            Queue<Integer> queue = new LinkedList<>();
+            queue.offer(a);
             while (!queue.isEmpty()) {
                 int size = queue.size();
-                for (int r = 0; r < size; r++) {
+                for (int k = 0; k < size; k++) {
                     int now = queue.poll();
-                    if (ch[now] == 1) continue;
-                    ch[now] = 1;
-                    cnt++;
-                    for (int next : graph.get(now)) {
-                        if (ch[next] == 0) {
-                            queue.offer(next);
+                    for (int x : graph.get(now)) {
+                        if (ch[x] == 0) {
+                            queue.offer(x);
+                            ch[x] = 1;
+                            cnt++;
                         }
                     }
                 }
             }
-            answer = Math.min(answer, Math.abs(cnt - (n - cnt)));
-            
+            answer = Math.min(answer, Math.abs(n - cnt - cnt));
         }
+        
         return answer;
     }
 }

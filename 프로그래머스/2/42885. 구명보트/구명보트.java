@@ -7,11 +7,8 @@ class Solution {
         while (lt <= rt) {
             if (people[lt] + people[rt] <= limit) {
                 lt++;
-                rt--;
             }
-            else {
-                rt--;
-            }
+            rt--;
             answer++;
         }
         return answer;

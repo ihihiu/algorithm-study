@@ -1,21 +1,21 @@
 import java.util.*;
 class Solution {
     public int solution(int[][] targets) {
-        int answer = 0;
+        int answer = 1;
         Arrays.sort(targets, (a, b) -> a[1] - b[1]);
-        int idx = 0, start = -1, end = -1;
-        
-        while (idx < targets.length) {
-            int[] now = targets[idx];
-            if (now[0] >= end) {
-                answer++;
-                start = now[0];
-                end = now[1];
+        int start = 0, end = 100000000;
+        for (int[] x : targets) {
+            int s = x[0];
+            int e = x[1];
+            if (s < end) {
+                start = Math.max(start, s);
+                end = Math.min(end, e);
             }
             else {
-                if (now[0] < start) start = now[0];
+                answer++;
+                start = s;
+                end = e;
             }
-            idx++;
         }
         return answer;
     }

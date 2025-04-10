@@ -1,29 +1,30 @@
 import java.util.*;
 class Solution {
     public int getTime(String x) {
-        int h = Integer.valueOf(x.split(":")[0]);
+        int h = Integer.valueOf(x.split(":")[0]) * 60;
         int m = Integer.valueOf(x.split(":")[1]);
-        return h * 60 + m;
+        return h + m;
     }
+    
     public int solution(String[][] book_time) {
         int answer = 0;
-        int n = book_time.length;
-        
-        LinkedList<int[]> queue = new LinkedList<>();
+        LinkedList<int[]> list = new LinkedList<>();
         for (String[] x : book_time) {
-            queue.offer(new int[]{getTime(x[0]), getTime(x[1])});
+            list.add(new int[]{getTime(x[0]), getTime(x[1])});
         }
-        Collections.sort(queue, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+        Collections.sort(list, (a, b) -> a[0] - b[0]);
         
-        PriorityQueue<Integer> pQ = new PriorityQueue<>();
+        int size = 0;
+        PriorityQueue<Integer> pQ = new PriorityQueue<>((a, b) -> a - b);
         
-        for (int i = 0; i < n; i++) {
-            int[] now = queue.poll();
+        for (int[] now : list) {
             while (!pQ.isEmpty() && pQ.peek() <= now[0]) {
                 pQ.poll();
+                size--;
             }
             pQ.offer(now[1] + 10);
-            answer = Math.max(answer, pQ.size());
+            size++;
+            if (size > answer) answer = size;
         }
         
         return answer;

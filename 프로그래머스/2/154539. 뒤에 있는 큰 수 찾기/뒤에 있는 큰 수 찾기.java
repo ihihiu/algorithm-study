@@ -3,24 +3,21 @@ class Solution {
     public int[] solution(int[] numbers) {
         int n = numbers.length;
         int[] answer = new int[n];
-        int max = numbers[n - 1];
-        answer[n - 1] = -1;
+        Arrays.fill(answer, -1);
+        
+        Stack<Integer> stack = new Stack<>();
+        stack.push(numbers[n - 1]);
         for (int i = n - 2; i >= 0; i--) {
-            if (numbers[i] >= max) {
-                answer[i] = -1;
-                max = numbers[i];
+            while (!stack.isEmpty() && stack.peek() <= numbers[i]) {
+                stack.pop();
             }
-            else if (numbers[i] < numbers[i + 1]) answer[i] = numbers[i + 1];
-            else {
-                int idx = i + 1;
-                while (answer[idx] != -1) {
-                    if (answer[idx] > numbers[i]) break;
-                    idx++;
-                }
-                answer[i] = answer[idx];
+            if (!stack.isEmpty() && stack.peek() > numbers[i]) {
+                answer[i] = stack.peek();
             }
-                    
+            stack.push(numbers[i]);
+            
         }
+        
         return answer;
     }
 }

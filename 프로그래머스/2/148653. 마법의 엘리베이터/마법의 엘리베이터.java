@@ -1,23 +1,23 @@
+import java.util.*;
 class Solution {
     public int solution(int storey) {
         int answer = 0;
-        int x = storey;
-        while (x > 0) {
-            int leftover = x % 10;
-            x/= 10;
-            if (leftover == 5) {
-                answer += (10 - leftover);
-                if (x % 10 >= 5) {    
-                    x++;
-                }
-                
-            } else if (leftover > 5) {
-                answer += (10 - leftover);
-                x++;
-            } else {
-                answer += leftover;
-            }
+        while (storey > 0) {
+            int num = storey % 10;
+            storey /= 10;
             
+            if (num > 5) {
+                answer += 10 - num;
+                storey++;
+            }
+            else if (num < 5) {
+                answer += num;
+            } else if (storey % 10 >= 5) {
+                answer += 5;
+                storey++;
+            } else {
+                answer += 5;
+            }
         }
         return answer;
     }

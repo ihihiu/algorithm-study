@@ -1,17 +1,20 @@
 import java.util.*;
 class Solution {
     public int solution(int k, int[] tangerine) {
+        int answer = 0;
         HashMap<Integer, Integer> sh = new HashMap<>();
-        for (int x : tangerine) sh.put(x, sh.getOrDefault(x, 0) + 1);
-        ArrayList<Integer> arr = new ArrayList<>();
-        for (int value : sh.values()) arr.add(value);
-        Collections.sort(arr, (a, b) -> b - a);
-        int sum = 0;
-        for (int i = 0; i < arr.size(); i++) {
-            sum += arr.get(i);
-            if (sum >= k) return i + 1;
+        for (int x : tangerine) {
+            sh.put(x, sh.getOrDefault(x, 0) + 1);
+        }
+        PriorityQueue<Integer> pQ = new PriorityQueue<>((a, b) -> b - a);
+        for (int key : sh.keySet()) {
+            pQ.offer(sh.get(key));
+        }
+        while (!pQ.isEmpty() && k > 0) {
+            answer++;
+            k -= pQ.poll();
         }
         
-        return 0;
+        return answer;
     }
 }

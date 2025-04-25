@@ -6,13 +6,13 @@ class Solution {
         for (int x : tangerine) {
             sh.put(x, sh.getOrDefault(x, 0) + 1);
         }
-        PriorityQueue<Integer> pQ = new PriorityQueue<>((a, b) -> b - a);
-        for (int key : sh.keySet()) {
-            pQ.offer(sh.get(key));
-        }
-        while (!pQ.isEmpty() && k > 0) {
+        List<Integer> list = new ArrayList<>(sh.values());
+        Collections.sort(list, (a, b) -> b - a);
+        
+        for (int x : list) {
+            if (k <= 0) break;
+            k -= x;
             answer++;
-            k -= pQ.poll();
         }
         
         return answer;

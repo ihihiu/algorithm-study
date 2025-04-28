@@ -10,6 +10,7 @@ class Solution {
         for (int i = 0; i < n; i++) {
             String[] board = places[i];
             boolean flag = true;
+            outerLoop:
             for (int x = 0; x < 5; x++) {
                 for (int y = 0; y < 5; y++) {
                     if (board[x].charAt(y) == 'P') {
@@ -27,7 +28,7 @@ class Solution {
                                     if (nx < 0 || nx >= 5 || ny < 0 || ny >= 5 || board[nx].charAt(ny) == 'X' || ch[nx][ny] == true) continue;
                                     if (board[nx].charAt(ny) == 'P') {
                                         flag = false;
-                                        break;
+                                        break outerLoop;
                                     }
                                     queue.offer(new int[]{nx, ny});
                                     ch[nx][ny] = true;

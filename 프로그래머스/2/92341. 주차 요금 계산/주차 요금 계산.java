@@ -7,40 +7,46 @@ class Solution {
     }
     
     public int[] solution(int[] fees, String[] records) {
-        HashMap<Integer, ArrayList<Integer>> sh = new HashMap<>();
+        HashMap<String, Integer> totalTime = new HashMap<>();
+        HashMap<String, Integer> in = new HashMap<>();
+        
         for (String x : records) {
-            int a = getTime(x.split(" ")[0]);
-            int b = Integer.valueOf(x.split(" ")[1]);
-            sh.putIfAbsent(b, new ArrayList<>());
-            sh.get(b).add(a);
-        }
-        
-        ArrayList<int[]> res = new ArrayList<>();
-        
-        for (int key : sh.keySet()) {
-            ArrayList<Integer> arr = sh.get(key);
-            
-            Collections.sort(arr, (a, b) -> a - b);
-            if (arr.size() % 2 == 1) arr.add(1439);
-            
-            int total = 0;
-            for (int i = 0; i < arr.size(); i += 2) {
-                int a = arr.get(i);
-                int b = arr.get(i + 1);
-                total += (b - a);
+            int time = getTime(x.split(" ")[0]);
+            String number = x.split(" ")[1];
+            if (in.containsKey(number)) {
+                totalTime.put(number, totalTime.getOrDefault(number, 0) + (time - in.get(number)));
+                in.remove(number);
             }
-            if (total <= fees[0]) res.add(new int[] {key, fees[1]});
             else {
-                total -= fees[0];
-                int k = total / fees[2];
-                if (total % fees[2] != 0) k++;
-                res.add(new int[] {key, fees[1] + k * fees[3]});
+                in.put(number, time);
             }
         }
         
-        Collections.sort(res, (a, b) -> a[0] - b[0]);
-        int[] answer = new int[res.size()];
-        for (int i = 0; i < res.size(); i++) answer[i] = res.get(i)[1];
+        for (String number : in.keySet()) {
+            totalTime.put(number, totalTime.getOrDefault(number, 0) + (23 * 60 + 59) - in.get(number));
+        }
+      
+        ArrayList<int[]> arr = new ArrayList<>();
+        
+        for (String number : totalTime.keySet()) {
+            int time = totalTime.get(number);
+            if (time <= fees[0]) {
+                arr.add(new int[]{Integer.valueOf(number), fees[1]});
+            }
+            else {
+                time -= fees[0];
+                int sum = fees[1];
+                sum += (time % fees[2] == 0) ? time / fees[2] * fees[3] : (time / fees[2] + 1) * fees[3];
+                arr.add(new int[] {Integer.valueOf(number), sum});
+            }
+        }
+        
+        Collections.sort(arr, (a, b) -> a[0] - b[0]);
+        
+        int[] answer = new int[arr.size()];
+        for (int i = 0; i < arr.size(); i++) {
+            answer[i] = arr.get(i)[1];
+        }
         
         return answer;
     }

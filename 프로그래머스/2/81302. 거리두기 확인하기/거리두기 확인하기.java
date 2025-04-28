@@ -1,52 +1,46 @@
 import java.util.*;
 class Solution {
-    public boolean bfs(String[] board, int i, int j) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{i, j});
-        int[][] ch = new int[5][5];
-        ch[i][j] = 1;
+    public int[] solution(String[][] places) {
+        int n = places.length;
+        int[] answer = new int[n];
+
         int[] dx = {-1, 0, 1, 0};
         int[] dy = {0, 1, 0, -1};
-    
-        int round = 0;
-        while (!queue.isEmpty() && round < 2) {
-            round++;
-            int size = queue.size();
-            for (int k = 0; k < size; k++) {
-                int[] now = queue.poll();
-                for (int d = 0; d < 4; d++) {
-                    int nx = now[0] + dx[d];
-                    int ny = now[1] + dy[d];
-                    if (nx < 0 || nx >= 5 || ny < 0 || ny >= 5 || board[nx].charAt(ny) == 'X' || ch[nx][ny] == 1) continue;
-                    if (board[nx].charAt(ny) == 'P') {
-                        return false;
-                    }
-                    queue.offer(new int[]{nx, ny});
-                    ch[nx][ny] = 1;
-                }
-            }
-        }
         
-        return true;
-    }
-    
-    public int[] solution(String[][] places) {
-        int[] answer = new int[5];
-        Arrays.fill(answer, 1);
-
-        
-        for (int idx = 0; idx < 5; idx++) {
-            String[] board = places[idx];
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-                    if (board[i].charAt(j) == 'P') {
-                        if(!bfs(board, i, j)) answer[idx] = 0; 
+        for (int i = 0; i < n; i++) {
+            String[] board = places[i];
+            boolean flag = true;
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < 5; y++) {
+                    if (board[x].charAt(y) == 'P') {
+                        Queue<int[]> queue = new LinkedList<>();
+                        queue.offer(new int[]{x, y});
+                        boolean[][] ch = new boolean[5][5];
+                        ch[x][y] = true;
+                        for (int r = 0; r < 2; r++) {
+                            int size = queue.size();
+                            for (int k = 0; k < size; k++) {
+                                int[] now = queue.poll();
+                                for (int l = 0; l < 4; l++) {
+                                    int nx = now[0] + dx[l];
+                                    int ny = now[1] + dy[l];
+                                    if (nx < 0 || nx >= 5 || ny < 0 || ny >= 5 || board[nx].charAt(ny) == 'X' || ch[nx][ny] == true) continue;
+                                    if (board[nx].charAt(ny) == 'P') {
+                                        flag = false;
+                                        break;
+                                    }
+                                    queue.offer(new int[]{nx, ny});
+                                    ch[nx][ny] = true;
+                                }
+                                
+                            }
+                        }
                     }
                 }
-         
             }
-            
+            if (flag) answer[i] = 1;
         }
+        
         return answer;
     }
 }

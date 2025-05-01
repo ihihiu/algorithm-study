@@ -1,5 +1,4 @@
 import java.util.*;
-
 class Info implements Comparable<Info> {
     String name;
     int ord;
@@ -16,28 +15,32 @@ class Info implements Comparable<Info> {
 class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
-        if (cacheSize == 0) return 5 * cities.length;
+        
+        if (cacheSize == 0) return cities.length * 5;
+        
         LinkedList<Info> list = new LinkedList<>();
         for (int i = 0; i < cities.length; i++) {
             String city = cities[i].toUpperCase();
             boolean hit = false;
-            if (!list.isEmpty()) {
-                for (Info x : list) {
-                    if (x.name.equals(city)) {
-                        answer++;
-                        hit = true;
-                        x.ord = i;
-                        break;
-                    }
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).name.equals(city)) {
+                    hit = true;
+                    answer++;
+                    list.get(j).ord = i;
+                    break;
                 }
             }
             if (!hit) {
-                if (list.size() == cacheSize) list.poll();
+                if (list.size() == cacheSize) {
+                    Collections.sort(list);
+                    list.poll();
+                }
                 list.offer(new Info(city, i));
                 answer += 5;
             }
-            Collections.sort(list);
+            
         }
+        
         return answer;
     }
 }

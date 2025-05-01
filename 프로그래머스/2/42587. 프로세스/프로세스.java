@@ -2,22 +2,23 @@ import java.util.*;
 class Solution {
     public int solution(int[] priorities, int location) {
         int answer = 0;
-        LinkedList<int[]> queue = new LinkedList<>();
+        LinkedList<int[]> list = new LinkedList<>();
+        PriorityQueue<Integer> pQ = new PriorityQueue<>((a, b) -> b - a);
+        
         for (int i = 0; i < priorities.length; i++) {
-            queue.offer(new int[]{priorities[i], i});
+            pQ.offer(priorities[i]);
+            list.add(new int[]{priorities[i], i});
         }
-        Integer[] p = Arrays.stream(priorities).boxed().toArray(Integer[]::new);
-        Arrays.sort(p, (a, b) -> b - a);
-        int idx = 0;
+        
         while (true) {
-            int[] now = queue.poll();
-            if (now[0] != p[idx]) queue.offer(now);
-            else {
-                answer++;
-                if (now[1] == location) break;;
-                idx++;
+            while (pQ.peek() != list.peek()[0]) {
+                list.offer(list.poll());
             }
+            pQ.poll();
+            answer++;
+            if (list.poll()[1] == location) break;
         }
+        
         
         return answer;
     }

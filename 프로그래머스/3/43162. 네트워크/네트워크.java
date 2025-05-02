@@ -1,24 +1,29 @@
+import java.util.*;
 class Solution {
-    int[] ch;
-    public void DFS(int n, int[][] computers, int m) {
-        ch[m] = 1;
-        for (int i = 0; i < n; i++) {
-            if (ch[i] == 0 && computers[m][i] == 1) {
-                DFS(n, computers, i);
-            }
-        }
-    }
-    
-    
     public int solution(int n, int[][] computers) {
         int answer = 0;
-        ch = new int[n];
+        boolean[] ch = new boolean[n];
+        
         for (int i = 0; i < n; i++) {
-            if (ch[i] == 0) {
-                DFS(n, computers, i);
+            if (!ch[i]) {
                 answer++;
+                ch[i] = true;
+                Queue<Integer> queue = new LinkedList<>();
+                queue.offer(i);
+                while (!queue.isEmpty()) {
+                    int now = queue.poll();
+                    for (int j = 0; j < n; j++) {
+                        if (computers[now][j] == 1 && !ch[j]) {
+                            ch[j] = true;
+                            queue.offer(j);
+                            
+                        }
+                    }
+                }
+                
             }
         }
+        
         
         return answer;
     }

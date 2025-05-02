@@ -1,47 +1,36 @@
+import java.util.*;
 class Solution {
-    int answer;
-    int n;
-    int[] ch;
+    static boolean[] ch;
+    static int answer;
     
-    public int diff(String a, String b) {
-        int res = 0;
-        for (int i = 0; i < a.length(); i++) {
-            if (a.charAt(i) != b.charAt(i)) res++;
-        }
-        return res;
-    }
-    
-    public void DFS(int depth, String pre, String target, String[] words) {
-        if (depth > answer) return;
-        if (depth > n + 1) return;
-        if (pre.equals(target)){
-            answer = Math.min(answer, depth);
+    static public void dfs(int depth, String now, String target, String[] words) {
+        if (depth >= answer) return;
+        if (now.equals(target)) {
+            answer = depth;
+            return;
         }
         else {
-            for (int i = 0; i < n; i++) {
-                if (ch[i] == 0 && diff(pre, words[i]) <= 1) {
-                    ch[i] = 1;
-                    DFS(depth +1, words[i], target, words);
-                    ch[i] = 0;
+            for (int i = 0; i < words.length; i++) {
+                if (!ch[i]) {
+                    int cnt = 0;
+                    for (int j = 0; j < target.length(); j++) {
+                        if (words[i].charAt(j) != now.charAt(j)) cnt++; 
+                    }
+                    if (cnt == 1) {
+                        ch[i] = true;
+                        dfs(depth + 1, words[i], target, words);
+                        ch[i] = false;
+                    }
                 }
             }
         }
+        
     }
     
     public int solution(String begin, String target, String[] words) {
-        answer = Integer.MAX_VALUE;
-        n = words.length;
-        ch = new int[n];
-        boolean flag = false;
-        for (String x : words) {
-            if (x.equals(target)) {
-                flag = true;
-                break;
-            }
-        }
-        if (!flag) return 0;
-        
-        DFS(0, begin, target, words);
-        return answer;
+        answer = 100;
+        ch = new boolean[words.length];
+        dfs(0, begin, target, words);
+        return answer == 100 ? 0 : answer;
     }
 }

@@ -1,28 +1,31 @@
+import java.io.*;
 import java.util.*;
 
-class Main {
-    public static void main(String[] args) {
-        Scanner kb = new Scanner(System.in);
-        int n = kb.nextInt();
-        int[][] board = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                board[i][j] = kb.nextInt();
-            }
-        }
-        int ord = 0;
-        int answer = 0;
+class Main{
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+
         PriorityQueue<int[]> pQ = new PriorityQueue<>((a, b) -> b[0] - a[0]);
-        for (int i = 0; i < n; i++) pQ.offer(new int[]{board[n - 1][i], n - 1, i});
-        while (!pQ.isEmpty()) {
-            int[] now = pQ.poll();
-            ord++;
-            answer = now[0];
-            if (ord == n) break;
-            if (now[1] - 1 >= 0) {
-                pQ.offer(new int[]{board[now[1] - 1][now[2]], now[1] - 1, now[2]});
+
+        int[][] arr = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        System.out.println(answer);
+
+        for (int i = 0; i < N; i++) {
+            pQ.add(new int[]{arr[N - 1][i], N - 1, i});
+        }
+
+        for (int i = 0; i < N - 1; i++) {
+            int[] now = pQ.poll();
+            pQ.add(new int[]{arr[now[1] - 1][now[2]], now[1] - 1, now[2]});
+        }
+
+        System.out.println(pQ.poll()[0]);
+
     }
 }

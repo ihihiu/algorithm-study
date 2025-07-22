@@ -1,50 +1,52 @@
-import java.sql.ClientInfoStatus;
+import java.io.*;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int k = scanner.nextInt();
-        LinkedList<Integer> conveyorBelt = new LinkedList<>();
-        for (int i = 0; i < 2 * n; i++) conveyorBelt.add(scanner.nextInt());
+class Main{
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-        LinkedList<Integer> robots = new LinkedList<>();
-        for (int i = 0; i < n; i++) robots.add(0);
+        st = new StringTokenizer(br.readLine());
+
+        LinkedList<Integer> belt = new LinkedList<>();
+        for (int i = 0; i < 2 * N; i++) {
+            belt.add(Integer.parseInt(st.nextToken()));
+        }
+        LinkedList<Integer> robot = new LinkedList<>();
+        for (int i = 0; i < N; i++) robot.add(0);
 
         int answer = 0;
         while (true) {
             answer++;
+            belt.addFirst(belt.pollLast());
+            robot.addFirst(robot.pollLast());
+            robot.set(N - 1, 0);
 
-            //벨트, 로봇 회전 + 내리기
-            conveyorBelt.addFirst(conveyorBelt.pollLast());
-            robots.addFirst(robots.pollLast());
-            robots.set(n - 1, 0);
-
-            //로봇 이동 시키기, 내리기 작업
-            for (int i = n - 2; i >= 0; i--) {
-                if (robots.get(i) == 1 && robots.get(i + 1) == 0 && conveyorBelt.get(i + 1) >= 1) {
-                    robots.set(i, 0);
-                    robots.set(i + 1, 1);
-                    conveyorBelt.set(i + 1, conveyorBelt.get(i + 1) - 1);
+            for (int i = N - 2; i >= 0; i--) {
+                if (robot.get(i) == 1 && robot.get(i + 1) == 0 && belt.get(i + 1) >= 1) {
+                    robot.set(i, 0);
+                    robot.set(i + 1, 1);
+                    belt.set(i + 1, belt.get(i + 1) - 1);
                 }
             }
-            robots.set(n - 1, 0);
+            robot.set(N - 1, 0);
 
-            //0자리 처리
-            if (conveyorBelt.get(0) >= 1) {
-                conveyorBelt.set(0, conveyorBelt.get(0) - 1);
-                robots.set(0, 1);
+            if (belt.get(0) >= 1) {
+                belt.set(0, belt.get(0) - 1);
+                robot.set(0, 1);
             }
 
-            //0개수 찾고 break
             int cnt = 0;
-            for (int x : conveyorBelt) {
+            for (int x : belt) {
                 if (x == 0) cnt++;
-                if (cnt >= k) break;
             }
-            if (cnt >= k) break;
+            if (cnt >= K) break;
         }
+
         System.out.println(answer);
     }
+
+
 }

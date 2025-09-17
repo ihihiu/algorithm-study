@@ -1,39 +1,45 @@
 import java.util.*;
-class Info implements Comparable<Info> {
-    public int play;
-    public int idx;
+
+class Info implements Comparable<Info>{
+    String genre;
+    int total;
     
-    Info(int play, int idx) {
-        this.play = play;
-        this.idx = idx;
+    public Info(String genre, int total) {
+        this.genre = genre;
+        this.total = total;
     }
     
     @Override
     public int compareTo(Info ob) {
-        if (this.play == ob.play) return this.idx - ob.idx;
-        return ob.play - this.play;
+        return ob.total - this.total;
     }
 }
+
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        ArrayList<Integer> res = new ArrayList<>();
-        HashMap<String, Integer> sh1 = new HashMap<>();
-        HashMap<String, ArrayList<Info>> sh2 = new HashMap<>();
+        HashMap<String, ArrayList<int[]>> sh = new HashMap<>();
+        HashMap<String, Integer> totals = new HashMap<>();
+        ArrayList<Info> arr = new ArrayList<>();
+        
         for (int i = 0; i < genres.length; i++) {
-            sh1.put(genres[i], sh1.getOrDefault(genres[i], 0) + plays[i]);
-            if (!sh2.containsKey(genres[i])) {
-                sh2.put(genres[i], new ArrayList<>());
-            }
-            sh2.get(genres[i]).add(new Info(plays[i], i));
+            if (!sh.containsKey(genres[i])) sh.put(genres[i], new ArrayList<>());
+            sh.get(genres[i]).add(new int[]{plays[i], i});
+            totals.put(genres[i], totals.getOrDefault(genres[i], 0) + plays[i]);
         }
-
-        ArrayList<String> keys = new ArrayList<>(sh1.keySet());
-        Collections.sort(keys, (a, b) -> sh1.get(b) - sh1.get(a));
-        for (String key : keys) {
-            ArrayList<Info> arr = sh2.get(key);
-            Collections.sort(arr);
-            res.add(arr.get(0).idx);
-            if (arr.size() >= 2)  res.add(arr.get(1).idx);
+        
+        for (String key : totals.keySet()) {
+            arr.add(new Info(key, totals.get(key)));
+        }
+        Collections.sort(arr, (a, b) -> b.total - a.total);
+        
+        ArrayList<Integer> res = new ArrayList<>();
+        for (int i = 0; i < arr.size(); i++) {
+            String g = arr.get(i).genre;
+            ArrayList<int[]> tmp = sh.get(g);
+            Collections.sort(tmp, (a, b) -> a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]);
+            for (int j = 0; j < Math.min(2, tmp.size()); j++) {
+                res.add(tmp.get(j)[1]);
+            }
         }
         
         int[] answer = new int[res.size()];

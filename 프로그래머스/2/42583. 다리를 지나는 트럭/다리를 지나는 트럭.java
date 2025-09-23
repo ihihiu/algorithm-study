@@ -1,22 +1,27 @@
 import java.util.*;
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        int answer = 0;
-        int n = truck_weights.length;
-        //(무게, 건너는 시간)
-        LinkedList<int[]> queue = new LinkedList<>();
-        
-        int sum = 0;
+        int N = truck_weights.length;
         int idx = 0;
         int time = 0;
-        while (idx < n) {
-            if (!queue.isEmpty() && time == queue.peek()[1]) {
-                sum -= queue.poll()[0];
+        
+        // (무게, 들어온 시간)
+        Queue<int[]> bridge = new LinkedList<>();
+        int bridgeWeight = 0;
+        int size = 0;
+        
+        while (idx < N || bridge.isEmpty()) {
+            // 나가는 시간이 된 트럭 처리
+            if (!bridge.isEmpty() && time == bridge.peek()[1] + bridge_length) {
+                int[] now = bridge.poll();
+                bridgeWeight -= now[0];
+                size--;
             }
-            if (idx < n && sum + truck_weights[idx] <= weight) {
-                queue.offer(new int[]{truck_weights[idx], time + bridge_length});
-                sum += truck_weights[idx];
-                idx++;
+            // 무게 측정하고 넣어주기
+            if (idx < N && size < bridge_length && bridgeWeight + truck_weights[idx] <= weight) {
+                bridge.add(new int[]{truck_weights[idx], time});
+                size++;
+                bridgeWeight += truck_weights[idx++];
             }
             time++;
         }

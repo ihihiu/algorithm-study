@@ -1,25 +1,24 @@
 import java.util.*;
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
+        int N = progresses.length;
+        int cnt = 0;
+        int day = 0;
+        
         ArrayList<Integer> arr = new ArrayList<>();
         
-        int n = progresses.length;
-        
-        int cnt = 0;
-        int pre = -1;
-        for (int i = 0; i < n; i++) {
-            int leftover = 100 - progresses[i];
-            int days = leftover / speeds[i];
-            if (leftover % speeds[i] != 0) days++;
-            if (days <= pre) {
-                cnt++;
-            }
-            else {
+        for (int i = 0; i < N; i++) {
+            int x = 100 - progresses[i];
+            int d = x / speeds[i] + (x % speeds[i] == 0 ? 0 : 1);
+            if (d > day) {
+                day = d;
                 arr.add(cnt);
                 cnt = 1;
-                pre = days;
+            } else {
+                cnt++;
             }
         }
+        
         arr.add(cnt);
         
         int[] answer = new int[arr.size() - 1];

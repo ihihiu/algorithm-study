@@ -1,24 +1,27 @@
 import java.util.*;
 class Solution {
     static int answer;
-    static int[] ch;
-    
-    static public void dfs(int depth, int k, int[][] dungeons) {
-        for (int i = 0; i < dungeons.length; i++) {
-            if (ch[i] == 0 && k >= dungeons[i][0]) {
-                ch[i] = 1;
-                answer = Math.max(answer, depth + 1);
-                dfs(depth + 1, k - dungeons[i][1], dungeons);
-                ch[i] = 0;
-            }
-        }
-
-    }
-    
+    static boolean[] ch;
     public int solution(int k, int[][] dungeons) {
         answer = 0;
-        ch = new int[dungeons.length];
-        dfs(0, k, dungeons);
+        ch = new boolean[dungeons.length];
+        dfs(0, dungeons, k);
         return answer;
+    }
+    
+    public void dfs(int depth, int[][] dungeons, int k) {
+        if (depth == dungeons.length) {
+            return;
+        }
+        else {
+            for (int i = 0; i < dungeons.length; i++) {
+                if (ch[i] == false && k >= dungeons[i][0]) {
+                    answer = Math.max(answer, depth + 1);
+                    ch[i] = true;
+                    dfs (depth + 1, dungeons, k - dungeons[i][1]);
+                    ch[i] = false;
+                }
+            }
+        }
     }
 }

@@ -1,38 +1,53 @@
 import java.util.*;
 class Solution {
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
+        int answer = n;
         
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
-        for (int i = 0; i <= n; i++) graph.add(new ArrayList<>());
+        ArrayList<ArrayList<Integer>> graph = new ArrayList();
+        
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList());
+        }
+        
         for (int[] wire : wires) {
             graph.get(wire[0]).add(wire[1]);
             graph.get(wire[1]).add(wire[0]);
         }
         
+        boolean[] ch = new boolean[n + 1];
+                
         for (int[] wire : wires) {
-            int x = wire[0];
-            int y = wire[1];
-            int[] ch = new int[n + 1];
-            int sum = 1;
-            ch[x] = 1;
-            ch[y] = 1;
+            Arrays.fill(ch, false);
+            ch[0] = true;
+            
+            int a = wire[0];
+            int b = wire[1];
             
             Queue<Integer> queue = new LinkedList<>();
-            queue.offer(x);
+            ch[a] = true;
+            ch[b] = true;
+            
+            queue.offer(a);
             
             while (!queue.isEmpty()) {
-                int a = queue.poll();
-                for (int now : graph.get(a)) {
-                    if (ch[now] == 0) {
-                        ch[now] = 1;
-                        sum++;
-                        queue.offer(now);
+                int now = queue.poll();
+                for (int next : graph.get(now)) {
+                    if (!ch[next]) {
+                        ch[next] = true;
+                        queue.offer(next);
                     }
                 }
             }
-            answer = Math.min(answer, Math.abs(n - sum - sum));
+            
+            int cnt = -1;
+            for (int i = 1; i <= n; i++) {
+                if (ch[i]) cnt++;
+            }
+            
+            answer = Math.min(answer, Math.abs(n - cnt - cnt));
+            
         }
+        
         
         return answer;
     }

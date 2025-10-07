@@ -4,7 +4,6 @@ class Solution {
         int answer = 0;
         Arrays.sort(people);
         int lt = 0, rt = people.length - 1;
-        
         while (lt <= rt) {
             if (people[lt] + people[rt] <= limit) {
                 lt++;
@@ -12,7 +11,6 @@ class Solution {
             rt--;
             answer++;
         }
-    
         return answer;
     }
 }

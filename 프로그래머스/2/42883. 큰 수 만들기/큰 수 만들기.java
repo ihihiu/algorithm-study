@@ -1,23 +1,27 @@
 import java.util.*;
 class Solution {
     public String solution(String number, int k) {
-        StringBuilder sb = new StringBuilder(number);
-        int n = number.length();
-        for (int i = k - 1; i >= 0; i--) {
-            int now = sb.charAt(i) - '0';
-            int post = sb.charAt(i + 1) - '0';
-            if (now < post) sb.deleteCharAt(i);
-            else {
-                for (int j = i + 1; j < n - 1; j++) {
-                    if (sb.charAt(j) - '0' < sb.charAt(j + 1) - '0') {
-                        sb.deleteCharAt(j);
-                        break;
-                    }
-                }
-            }
+        String answer = "";
+        int N = number.length();
+        
+        Stack<Integer> stack = new Stack<>();
+        
+        for (int i = 0; i < N; i++) {
+            int num = number.charAt(i) - '0';
+            while (k > 0 && !stack.isEmpty() && stack.peek() < num) {
+                stack.pop();
+                k--;
+            } 
+            stack.push(num);
         }
         
-        String answer = sb.substring(0, number.length() - k);
+        while(k > 0) {
+            stack.pop();
+            k--;
+        }
+        
+        for (int x : stack) answer += x;
+        
         return answer;
     }
 }

@@ -1,39 +1,38 @@
 import java.util.*;
 class Solution {
-    static int[] parent;
-    public static void union(int x, int y) {
-        int px = find(x);
-        int py = find(y);
-        if (px < py) {
-            parent[px] = py;
-        } else {
-            parent[py] = px;
-        }
-    }
-    
-    public static int find(int x) {
-        if (parent[x] == x) return x;
-        return parent[x] = find(parent[x]);
-    }
-    
     public int solution(int n, int[][] costs) {
         int answer = 0;
-        parent = new int[n + 1];
-        for (int i = 1; i < n; i++) parent[i] = i;
         
-        List<int[]> edges = new ArrayList<>();
-        for (int[] c : costs) edges.add(c);
-        edges.sort((a, b) -> a[2] - b[2]);
+        ArrayList<ArrayList<int[]>> graph = new ArrayList<>();
         
-        for (int[] e : edges) {
-            int x = e[0];
-            int y = e[1];
-            int cost = e[2];
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
         
-            if (find(x) != find(y)) {
-                union(x, y);
-                answer += cost;
+        for (int[] c : costs) {
+            int a = c[0];
+            int b = c[1];
+            int cost = c[2];
+            graph.get(a).add(new int[]{b, cost});
+            graph.get(b).add(new int[]{a, cost});
+        }
+
+        
+        boolean[] visited = new boolean[n];
+        
+        PriorityQueue<int[]> pQ = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pQ.offer(new int[]{0, 0});
+        
+        while (!pQ.isEmpty()) {
+            int[] now = pQ.poll();
+            if (visited[now[0]]) continue;
+            visited[now[0]] = true;
+            answer += now[1];
+            
+            for (int[] next : graph.get(now[0])) {
+                if (!visited[next[0]]) pQ.offer(next);
             }
+            
         }
         
         

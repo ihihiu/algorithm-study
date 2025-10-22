@@ -2,37 +2,38 @@ import java.util.*;
 class Solution {
     public int solution(int n, int[][] edge) {
         int answer = 0;
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
-        int[] distance = new int[n + 1];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        
+        HashMap<Integer, ArrayList<Integer>> sh = new HashMap<>();
+        
         for (int i = 0; i <= n; i++) {
-            graph.add(new ArrayList<>());
+            sh.put(i, new ArrayList<>());
         }
-        for (int[] x : edge) {
-            graph.get(x[0]).add(x[1]);
-            graph.get(x[1]).add(x[0]);
+        
+        for (int[] ver : edge) {
+            sh.get(ver[0]).add(ver[1]);
+            sh.get(ver[1]).add(ver[0]);
         }
-        PriorityQueue<int[]> pQ = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-        pQ.offer(new int[]{1, 0});
-        distance[1] = 0;
-        while(!pQ.isEmpty()) {
-            int[] now = pQ.poll();
-            if (distance[now[0]] < now[1]) continue;
-            for (int x : graph.get(now[0])) {
-                if (distance[x] > now[1] + 1) {
-                    distance[x] = now[1] + 1;
-                    pQ.offer(new int[] {x, distance[x]});
+        
+        boolean[] visited = new boolean[n + 1];
+        visited[1] = true;
+        
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
+        
+        while (!queue.isEmpty()) {
+            answer = queue.size();
+            for (int i = 0; i < answer; i++) {
+                int now = queue.poll();
+                for (int key : sh.get(now)) {
+                    if (!visited[key]) {
+                        visited[key] = true;
+                        queue.add(key);
+                    }
                 }
             }
-            
         }
-        int max = Integer.MIN_VALUE;
-        for (int i = 1; i <= n; i++) {
-            max = Math.max(max, distance[i]);
-        }
-        for (int i = 1; i <= n; i++) {
-            if (max == distance[i]) answer++;
-        }
+        
+        
         return answer;
     }
 }

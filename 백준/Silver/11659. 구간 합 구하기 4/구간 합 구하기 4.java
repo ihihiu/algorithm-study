@@ -1,18 +1,29 @@
 import java.util.*;
+import java.io.*;
 
-class Main {
-    public static void main(String[] args) {
-        Scanner kb = new Scanner(System.in);
-        int n = kb.nextInt();
-        int m = kb.nextInt();
-        int[] sum = new int[n + 1];
-        for (int i = 1; i <= n; i++) {
-            sum[i] = sum[i - 1] +  kb.nextInt();
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+
+        long[] dp = new long[N + 1];
+
+        st = new StringTokenizer(br.readLine());
+
+        for (int i = 1; i <= N; i++) {
+            dp[i] = dp[i - 1] + Integer.parseInt(st.nextToken());
         }
-        for (int i = 0; i < m; i++) {
-            int a = kb.nextInt();
-            int b = kb.nextInt();
-            System.out.println(sum[b] - sum[a - 1]);
+
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int s = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+            System.out.println(dp[e] - dp[s - 1]);
         }
+
+
     }
 }

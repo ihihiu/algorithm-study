@@ -1,24 +1,29 @@
 import java.util.*;
+import java.io.*;
 
-class Main {
-    public static void main(String[] args) {
-        Main T = new Main();
-        Scanner kb = new Scanner(System.in);
-        int n = kb.nextInt();
-        int[] time = new int[n];
-        int[] price = new int[n];
-        for (int i = 0; i < n; i++) {
-            time[i] = kb.nextInt();
-            price[i] = kb.nextInt();
-        }
-        int[] dp = new int[n + 1];
-        int max = 0;
-        for (int i = 0; i < n; i++) {
-            if (i + time[i] <= n) {
-                dp[i + time[i]] = Math.max(dp[i] + price[i], dp[i + time[i]]);
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+
+        int[] dp = new int[N + 2];
+
+        StringTokenizer st;
+        for (int i = 1; i <= N; i++) {
+            st = new StringTokenizer(br.readLine());
+            int day = Integer.parseInt(st.nextToken());
+            int price = Integer.parseInt(st.nextToken());
+
+            // 상담을 하는 경우
+            if (i + day <= N + 1) {
+                dp[i + day] = Math.max(dp[i + day], dp[i] + price);
             }
+
+            // 최대값 보장
             dp[i + 1] = Math.max(dp[i + 1], dp[i]);
         }
-        System.out.println(dp[n]);
+
+        System.out.println(dp[N + 1]);
+
     }
 }

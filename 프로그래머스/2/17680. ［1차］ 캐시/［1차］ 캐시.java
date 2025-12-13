@@ -1,45 +1,54 @@
 import java.util.*;
+
 class Info implements Comparable<Info> {
     String name;
-    int ord;
-    public Info(String name, int ord) {
+    int cnt;
+    
+    public Info(String name, int cnt) {
         this.name = name;
-        this.ord = ord;
+        this.cnt = cnt;
     }
+    
     @Override
     public int compareTo(Info ob) {
-        return this.ord - ob.ord;
+        return this.cnt - ob.cnt;
     }
+    
 }
 
 class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
         
-        if (cacheSize == 0) return cities.length * 5;
+        List<Info> cache = new LinkedList<>();
         
-        LinkedList<Info> list = new LinkedList<>();
-        for (int i = 0; i < cities.length; i++) {
-            String city = cities[i].toUpperCase();
-            boolean hit = false;
-            for (int j = 0; j < list.size(); j++) {
-                if (list.get(j).name.equals(city)) {
-                    hit = true;
-                    answer++;
-                    list.get(j).ord = i;
+        int idx = 0;
+        for (String c : cities) {
+            String city = c.toUpperCase();
+            if (cacheSize == 0) {
+                answer += 5;
+                continue;
+            }
+            boolean isHit = false;
+            for (int i = 0; i < cache.size(); i++) {
+                if (city.equals(cache.get(i).name)) {
+                    isHit = true;
+                    cache.get(i).cnt = idx;
+                    answer += 1;
                     break;
                 }
             }
-            if (!hit) {
-                if (list.size() == cacheSize) {
-                    Collections.sort(list);
-                    list.poll();
+            if (!isHit) {
+                if (cache.size() == cacheSize) {
+                    Collections.sort(cache);
+                    cache.remove(0);
                 }
-                list.offer(new Info(city, i));
+                cache.add(new Info(city, idx));
                 answer += 5;
             }
-            
+            idx++;
         }
+        
         
         return answer;
     }

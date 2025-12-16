@@ -2,32 +2,28 @@ import java.util.*;
 class Solution {
     public int solution(int[] priorities, int location) {
         int answer = 0;
+        int n = priorities.length;
+        
         Queue<int[]> queue = new LinkedList<>();
-        
-        for (int i = 0; i < priorities.length; i++) {
-            queue.offer(new int[]{priorities[i], i});
+        for (int i = 0; i < n; i++) {
+            queue.offer(new int[]{i, priorities[i]});
         }
-        
         Arrays.sort(priorities);
-        int idx = priorities.length - 1;
+        int ord = n - 1;
         
-        
-        while (!queue.isEmpty()) {
-            if (queue.peek()[0] == priorities[idx]) {
-                idx--;
-                answer++;
-                if (queue.peek()[1] == location) {
+        while (true) {
+            if (queue.peek()[1] == priorities[ord]) {
+                answer++;    
+                if (queue.peek()[0] == location) {
                     break;
                 }
-                else {
-                    queue.poll();
-                }
+                queue.poll();
+                ord--;
+            } else {
+                queue.add(queue.poll());
             }
-            else {
-                queue.offer(queue.poll());
-            }
+            
         }
-        
         
         return answer;
     }

@@ -1,27 +1,27 @@
 import java.util.*;
 class Solution {
-    static int answer, cnt;
+    static char[] list = {'A', 'E', 'I', 'O', 'U'};
+    static int answer;
+    static boolean found;
     static String target;
-    static char[] aeiou = {'A', 'E', 'I', 'O', 'U'};
     public int solution(String word) {
         answer = 0;
-        cnt = 0;
+        found = false;
         target = word;
         dfs(0, "");
-        
         return answer;
     }
     
-    static public void dfs(int depth, String tmp) {
-        if (answer != 0) return;
+    static void dfs(int depth, String tmp) {
         if (tmp.equals(target)) {
-            answer = cnt;
+            found = true;
             return;
         }
-        if (depth == aeiou.length) return;
-        for (int i = 0; i < aeiou.length; i++) {
-            cnt++;
-            dfs(depth + 1, tmp + aeiou[i]);
+        if (depth >= 5) return;
+        for (int i = 0; i < 5; i++) {
+            if (found) return;
+            answer++;
+            dfs(depth + 1, tmp + list[i]);
         }
     }
 }
